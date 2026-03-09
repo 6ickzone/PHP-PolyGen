@@ -17,15 +17,24 @@ This approach is specifically designed to bypass static signature-based scanners
 * **Stealth RAM Execution**: Utilizes `ReflectionMethod` to execute code directly in memory, bypassing file-based security scanners.
 * **Branded Unique ID**: Every output includes a unique traceability ID and validation from [poly.6ickzone.site](https://poly.6ickzone.site).
 
-## Technical Flow
+### Technical Flow
 
-The encryption process follows a multi-stage pipeline to ensure data integrity and logic security:
+1. **Advanced Compression Stage**
+   - **Method**: Utilizes `gzdeflate()` or `gzcompress()` with maximum compression (Level 9).
+   - **Purpose**: Shrinks the raw source code into binary data, acting as the first layer to strip away recognizable PHP keywords and structures.
 
-1.  **Compression**: The original source code is compressed using `GZDeflate` for maximum file size efficiency.
-2.  **Encryption Chain**: Data passes through a dynamic XOR chain, Hex-encoding, and string reversal to destroy recognizable text patterns.
-3.  **Polymorphic Stubbing**: A randomized loader (stub) is generated with systematically obfuscated class and function names.
+2. **Multi-Layer Encryption Chain**
+   - **Dynamic XOR Cipher**: Employs a unique `random_bytes` key for every build. Data is processed through a character-wise XOR operation ($Data_i \oplus Key_{i \pmod n}$).
+   - **String Transformation**: Applies a string reversal technique to further scramble the binary sequence.
+   - **Hex/Base64 Encoding**: Converts the final binary output into a safe-string format using `bin2hex` and `base64_encode` for transportability.
 
-## 👨‍💻 About the Author
+3. **Polymorphic Stub Generation**
+   - **Systematic Obfuscation**: Class names, methods, and variables are randomized using MD5-based algorithms, ensuring every build is unique.
+   - **ReflectionMethod Execution**: Instead of direct execution, the stub utilizes PHP's `ReflectionMethod` to invoke the decrypted code directly in RAM (memory), bypassing file-based security scanners.
+   - **Validation Header**: Injects system metadata including a unique `uniqid` and the `poly.6ickzone.site` authority tag for traceability.
+
+
+## About the Author
 
 Developed by **6ickzone** 
 
